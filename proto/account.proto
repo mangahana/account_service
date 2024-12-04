@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+option go_package = "./account_proto";
+
+package account_proto;
+
+import "google/protobuf/empty.proto";
+
+service Account {
+  rpc Register(RegisterReq) returns (google.protobuf.Empty) {}
+  rpc ConfirmCode(ConfirmCodeReq) returns (google.protobuf.Empty) {}
+  rpc CompleteRegister(CompleteRegisterReq) returns (AuthRes) {}
+  rpc Login(LoginReq) returns (AuthRes) {}
+}
+
+message RegisterReq {
+  string phone = 1;
+}
+
+message ConfirmCodeReq {
+  string phone = 1;
+  string code  = 2;
+}
+
+message CompleteRegisterReq {
+  string phone = 1;
+  string code = 2;
+  string username = 3;
+  string password = 4;
+}
+
+message AuthRes {
+  string access_token = 1;
+}
+
+message LoginReq {
+  string phone    = 1;
+  string password = 2;
+}
