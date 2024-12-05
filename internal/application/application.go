@@ -15,6 +15,8 @@ type UserService interface {
 	IsPhoneExists(c context.Context, phone string) (bool, error)
 
 	Create(c context.Context, username, phone, password string) (int, error)
+
+	UpdatePassword(c context.Context, userId int, password string) error
 }
 
 type CodeService interface {
@@ -112,5 +114,57 @@ func (app *app) Login(c context.Context, dto *dtos.LoginInput) (*dtos.AuthOutput
 		return &dtos.AuthOutput{}, domain.ErrInvalidCredentials
 	}
 
-	return app.sessionService.Create(c, user.ID)
+	session, err := app.sessionService.Create(c, user.ID)
+	if err != nil {
+		app.logger.Error("failed to create access token", zap.Error(err))
+		return nil, err
+	}
+
+	return session, nil
+}
+
+func (app *app) Recovery(c context.Context, dto *dtos.RecoveryInput) error {
+	exists, err := app.userService.IsPhoneExists(c, dto.Phone)
+	if err != nil {
+		app.logger.Error("failed to check phone", zap.Error(err))
+		return err
+	}
+
+	if !exists {
+		return domain.ErrPhoneNotFound
+	}
+
+	if err := app.codeService.Send(c, dto.Phone, dto.IP); err != nil {
+		app.logger.Error("failed to send recovery code", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
+func (app *app) CompleteRecovery(c context.Context, dto *dtos.CompleteRecovery) (*dtos.AuthOutput, error) {
+	err := app.codeService.Verify(c, dto.Phone, dto.Code)
+	if err != nil {
+		app.logger.Error("failed to verify code", zap.Error(err))
+		return &dtos.AuthOutput{}, err
+	}
+
+	user, err := app.userService.FindOneByPhone(c, dto.Phone)
+	if err != nil {
+		app.logger.Error("failed to find user by phone", zap.Error(err))
+		return &dtos.AuthOutput{}, err
+	}
+
+	if err := app.userService.UpdatePassword(c, user.ID, dto.Password); err != nil {
+		app.logger.Error("failed to update password", zap.Error(err))
+		return &dtos.AuthOutput{}, err
+	}
+
+	session, err := app.sessionService.Create(c, user.ID)
+	if err != nil {
+		app.logger.Error("failed to create session", zap.Error(err))
+		return &dtos.AuthOutput{}, err
+	}
+
+	return session, nil
 }

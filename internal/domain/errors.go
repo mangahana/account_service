@@ -4,6 +4,7 @@ import "errors"
 
 var (
 	ErrUserNotFound         = errors.New("USER_NOT_FOUND")
+	ErrPhoneNotFound        = errors.New("PHONE_NOT_FOUND")
 	ErrInvalidUsername      = errors.New("INVALID_USERNAME")
 	ErrTooShortPassword     = errors.New("TOO_SHORT_PASSWORD")
 	ErrPhoneAlreadyInUse    = errors.New("PHONE_ALREADY_IN_USE")

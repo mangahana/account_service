@@ -82,3 +82,18 @@ func TestFindOneByPhone(t *testing.T) {
 		assert.ErrorIs(t, err, domain.ErrUserNotFound)
 	})
 }
+
+func TestUpdatePassword(t *testing.T) {
+	c, repo := setup(t)
+
+	t.Run("success", func(t *testing.T) {
+		repo.EXPECT().FindOneByID(c, 1).Return(&domain.User{ID: 1}, nil)
+		repo.EXPECT().Save(c, gomock.Any()).Return(nil)
+
+		service := New(repo)
+
+		err := service.UpdatePassword(c, 1, "newpassword")
+
+		assert.NoError(t, err)
+	})
+}

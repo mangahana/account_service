@@ -126,3 +126,40 @@ func TestLogin(t *testing.T) {
 		assert.ErrorIs(t, err, domain.ErrInvalidCredentials)
 	})
 }
+
+func TestRecovery(t *testing.T) {
+	c, logger, userService, codeService, sessionService := setup(t)
+
+	t.Run("success", func(t *testing.T) {
+		userService.EXPECT().IsPhoneExists(c, "7779998866").Return(true, nil)
+		codeService.EXPECT().Send(c, "7779998866", "127.0.0.1").Return(nil)
+		service := New(logger, userService, codeService, sessionService)
+
+		dto := dtos.RecoveryInput{
+			Phone: "7779998866",
+			IP:    "127.0.0.1",
+		}
+
+		err := service.Recovery(c, &dto)
+		assert.NoError(t, err)
+	})
+}
+
+func TestCompleteRecovery(t *testing.T) {
+	c, logger, userService, codeService, sessionService := setup(t)
+
+	t.Run("success", func(t *testing.T) {
+		codeService.EXPECT().Verify(c, "7778889966", "1234").Return(nil)
+		userService.EXPECT().FindOneByPhone(c, "7778889966").Return(&domain.User{ID: 1}, nil)
+		userService.EXPECT().UpdatePassword(c, 1, gomock.Any()).Return(nil)
+		sessionService.EXPECT().Create(c, gomock.Any()).Return(&dtos.AuthOutput{AccessToken: "this is a token"}, nil)
+
+		app := New(logger, userService, codeService, sessionService)
+
+		dto := &dtos.CompleteRecovery{Phone: "7778889966", Code: "1234", Password: "qwerty123"}
+		session, err := app.CompleteRecovery(c, dto)
+
+		assert.NoError(t, err)
+		assert.NotZero(t, session)
+	})
+}

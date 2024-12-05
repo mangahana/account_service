@@ -41,9 +41,25 @@ func NewUser(username, phone, password string) (*User, error) {
 		Username: username,
 		Phone:    phone,
 		Password: string(hashedPassword),
+		Role:     NewUserRole(),
 	}, nil
 }
 
 func (u *User) ComparePassword(password string) error {
 	return bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
+}
+
+func (u *User) SetPassword(password string) error {
+	if len(password) < 8 {
+		return ErrTooShortPassword
+	}
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 10)
+	if err != nil {
+		return err
+	}
+
+	u.Password = string(hashedPassword)
+
+	return nil
 }

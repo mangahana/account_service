@@ -12,8 +12,10 @@ import (
 type Repository interface {
 	FindOneByPhone(c context.Context, phone string) (*domain.User, error)
 	FindOneByUsername(c context.Context, username string) (*domain.User, error)
+	FindOneByID(c context.Context, userId int) (*domain.User, error)
 
 	Create(c context.Context, user *domain.User) (int, error)
+	Save(c context.Context, user *domain.User) error
 }
 
 type service struct {
@@ -61,4 +63,17 @@ func (s *service) FindOneByPhone(c context.Context, phone string) (*domain.User,
 	}
 
 	return user, nil
+}
+
+func (s *service) UpdatePassword(c context.Context, userId int, password string) error {
+	user, err := s.repo.FindOneByID(c, userId)
+	if err != nil {
+		return err
+	}
+
+	if err := user.SetPassword(password); err != nil {
+		return err
+	}
+
+	return s.repo.Save(c, user)
 }

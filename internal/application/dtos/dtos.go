@@ -25,3 +25,14 @@ type LoginInput struct {
 type AuthOutput struct {
 	AccessToken string `json:"access_token"`
 }
+
+type RecoveryInput struct {
+	Phone string `json:"phone"`
+	IP    string
+}
+
+type CompleteRecovery struct {
+	Phone    string `json:"phone"`
+	Code     string `json:"code"`
+	Password string `json:"password"`
+}

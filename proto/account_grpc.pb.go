@@ -24,6 +24,8 @@ const (
 	Account_ConfirmCode_FullMethodName      = "/account_proto.Account/ConfirmCode"
 	Account_CompleteRegister_FullMethodName = "/account_proto.Account/CompleteRegister"
 	Account_Login_FullMethodName            = "/account_proto.Account/Login"
+	Account_Recovery_FullMethodName         = "/account_proto.Account/Recovery"
+	Account_CompleteRecovery_FullMethodName = "/account_proto.Account/CompleteRecovery"
 )
 
 // AccountClient is the client API for Account service.
@@ -34,6 +36,8 @@ type AccountClient interface {
 	ConfirmCode(ctx context.Context, in *ConfirmCodeReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	CompleteRegister(ctx context.Context, in *CompleteRegisterReq, opts ...grpc.CallOption) (*AuthRes, error)
 	Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*AuthRes, error)
+	Recovery(ctx context.Context, in *RecoveryReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	CompleteRecovery(ctx context.Context, in *CompleteRecoveryReq, opts ...grpc.CallOption) (*AuthRes, error)
 }
 
 type accountClient struct {
@@ -84,6 +88,26 @@ func (c *accountClient) Login(ctx context.Context, in *LoginReq, opts ...grpc.Ca
 	return out, nil
 }
 
+func (c *accountClient) Recovery(ctx context.Context, in *RecoveryReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Account_Recovery_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountClient) CompleteRecovery(ctx context.Context, in *CompleteRecoveryReq, opts ...grpc.CallOption) (*AuthRes, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AuthRes)
+	err := c.cc.Invoke(ctx, Account_CompleteRecovery_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AccountServer is the server API for Account service.
 // All implementations must embed UnimplementedAccountServer
 // for forward compatibility.
@@ -92,6 +116,8 @@ type AccountServer interface {
 	ConfirmCode(context.Context, *ConfirmCodeReq) (*emptypb.Empty, error)
 	CompleteRegister(context.Context, *CompleteRegisterReq) (*AuthRes, error)
 	Login(context.Context, *LoginReq) (*AuthRes, error)
+	Recovery(context.Context, *RecoveryReq) (*emptypb.Empty, error)
+	CompleteRecovery(context.Context, *CompleteRecoveryReq) (*AuthRes, error)
 	mustEmbedUnimplementedAccountServer()
 }
 
@@ -113,6 +139,12 @@ func (UnimplementedAccountServer) CompleteRegister(context.Context, *CompleteReg
 }
 func (UnimplementedAccountServer) Login(context.Context, *LoginReq) (*AuthRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
+}
+func (UnimplementedAccountServer) Recovery(context.Context, *RecoveryReq) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Recovery not implemented")
+}
+func (UnimplementedAccountServer) CompleteRecovery(context.Context, *CompleteRecoveryReq) (*AuthRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CompleteRecovery not implemented")
 }
 func (UnimplementedAccountServer) mustEmbedUnimplementedAccountServer() {}
 func (UnimplementedAccountServer) testEmbeddedByValue()                 {}
@@ -207,6 +239,42 @@ func _Account_Login_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Account_Recovery_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RecoveryReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServer).Recovery(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Account_Recovery_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServer).Recovery(ctx, req.(*RecoveryReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Account_CompleteRecovery_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CompleteRecoveryReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServer).CompleteRecovery(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Account_CompleteRecovery_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServer).CompleteRecovery(ctx, req.(*CompleteRecoveryReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Account_ServiceDesc is the grpc.ServiceDesc for Account service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -229,6 +297,14 @@ var Account_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Login",
 			Handler:    _Account_Login_Handler,
+		},
+		{
+			MethodName: "Recovery",
+			Handler:    _Account_Recovery_Handler,
+		},
+		{
+			MethodName: "CompleteRecovery",
+			Handler:    _Account_CompleteRecovery_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

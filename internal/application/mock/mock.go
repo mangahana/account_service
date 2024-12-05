@@ -87,6 +87,20 @@ func (mr *MockUserServiceMockRecorder) IsPhoneExists(c, phone any) *gomock.Call 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsPhoneExists", reflect.TypeOf((*MockUserService)(nil).IsPhoneExists), c, phone)
 }
 
+// UpdatePassword mocks base method.
+func (m *MockUserService) UpdatePassword(c context.Context, userId int, password string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdatePassword", c, userId, password)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdatePassword indicates an expected call of UpdatePassword.
+func (mr *MockUserServiceMockRecorder) UpdatePassword(c, userId, password any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePassword", reflect.TypeOf((*MockUserService)(nil).UpdatePassword), c, userId, password)
+}
+
 // MockCodeService is a mock of CodeService interface.
 type MockCodeService struct {
 	ctrl     *gomock.Controller

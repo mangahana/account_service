@@ -71,6 +71,24 @@ func TestFindOneByUsername(t *testing.T) {
 	})
 }
 
+func TestFindOneByID(t *testing.T) {
+	c, db := setup(t)
+
+	t.Run("success", func(t *testing.T) {
+		repo := New(db)
+
+		_, err := db.Exec(c, "INSERT INTO users (id, username, phone, password) VALUES(99, 'doe', '7775556699', '12345678')")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		user, err := repo.FindOneByID(c, 99)
+
+		assert.NoError(t, err)
+		assert.NotZero(t, user)
+	})
+}
+
 func TestCreate(t *testing.T) {
 	c, db := setup(t)
 
@@ -81,5 +99,22 @@ func TestCreate(t *testing.T) {
 
 		assert.NoError(t, err)
 		assert.NotZero(t, userId)
+	})
+}
+
+func TestSave(t *testing.T) {
+	c, db := setup(t)
+
+	t.Run("success", func(t *testing.T) {
+		db.Exec(c, "INSERT INTO users (id, username, phone, password) VALUES (66,'john', '7779998866', 'oldpass');")
+
+		repo := New(db)
+
+		user, _ := domain.NewUser("newuser", "7778885566", "qwerty156")
+		user.ID = 1
+
+		err := repo.Save(c, user)
+
+		assert.NoError(t, err)
 	})
 }

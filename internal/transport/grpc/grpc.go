@@ -83,3 +83,22 @@ func (s *server) Login(c context.Context, req *pb.LoginReq) (*pb.AuthRes, error)
 		AccessToken: res.AccessToken,
 	}, nil
 }
+
+func (s *server) Recovery(c context.Context, req *pb.RecoveryReq) (*emptypb.Empty, error) {
+	err := s.useCase.Recovery(c, &dtos.RecoveryInput{Phone: req.Phone})
+	return &emptypb.Empty{}, err
+}
+
+func (s *server) CompleteRecovery(c context.Context, req *pb.CompleteRecoveryReq) (*pb.AuthRes, error) {
+	dto := &dtos.CompleteRecovery{
+		Phone:    req.Phone,
+		Code:     req.Code,
+		Password: req.Password,
+	}
+	session, err := s.useCase.CompleteRecovery(c, dto)
+	if err != nil {
+		return &pb.AuthRes{}, err
+	}
+
+	return &pb.AuthRes{AccessToken: session.AccessToken}, nil
+}

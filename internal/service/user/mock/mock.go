@@ -56,6 +56,21 @@ func (mr *MockRepositoryMockRecorder) Create(c, user any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockRepository)(nil).Create), c, user)
 }
 
+// FindOneByID mocks base method.
+func (m *MockRepository) FindOneByID(c context.Context, userId int) (*domain.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindOneByID", c, userId)
+	ret0, _ := ret[0].(*domain.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindOneByID indicates an expected call of FindOneByID.
+func (mr *MockRepositoryMockRecorder) FindOneByID(c, userId any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindOneByID", reflect.TypeOf((*MockRepository)(nil).FindOneByID), c, userId)
+}
+
 // FindOneByPhone mocks base method.
 func (m *MockRepository) FindOneByPhone(c context.Context, phone string) (*domain.User, error) {
 	m.ctrl.T.Helper()
@@ -84,4 +99,18 @@ func (m *MockRepository) FindOneByUsername(c context.Context, username string) (
 func (mr *MockRepositoryMockRecorder) FindOneByUsername(c, username any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindOneByUsername", reflect.TypeOf((*MockRepository)(nil).FindOneByUsername), c, username)
+}
+
+// Save mocks base method.
+func (m *MockRepository) Save(c context.Context, user *domain.User) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Save", c, user)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Save indicates an expected call of Save.
+func (mr *MockRepositoryMockRecorder) Save(c, user any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockRepository)(nil).Save), c, user)
 }
