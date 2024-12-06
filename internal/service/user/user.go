@@ -65,10 +65,19 @@ func (s *service) FindOneByPhone(c context.Context, phone string) (*domain.User,
 	return user, nil
 }
 
+func (s *service) FindOneByID(c context.Context, userId int) (*domain.User, error) {
+	user, err := s.repo.FindOneByID(c, userId)
+	if err != nil {
+		return &domain.User{}, domain.ErrUserNotFound
+	}
+
+	return user, nil
+}
+
 func (s *service) UpdatePassword(c context.Context, userId int, password string) error {
 	user, err := s.repo.FindOneByID(c, userId)
 	if err != nil {
-		return err
+		return domain.ErrUserNotFound
 	}
 
 	if err := user.SetPassword(password); err != nil {

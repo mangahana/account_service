@@ -5,9 +5,11 @@ import (
 	"account/internal/infrastructure/configuration"
 	"account/internal/infrastructure/logger"
 	"account/internal/infrastructure/postgresql"
+	ban_repository "account/internal/infrastructure/repository/ban"
 	code_repository "account/internal/infrastructure/repository/code"
 	session_repository "account/internal/infrastructure/repository/session"
 	user_repository "account/internal/infrastructure/repository/user"
+	ban_service "account/internal/service/ban"
 	code_service "account/internal/service/code"
 	session_service "account/internal/service/session"
 	user_service "account/internal/service/user"
@@ -41,15 +43,17 @@ func main() {
 
 	// repositories
 	userRepository := user_repository.New(db)
+	banRepository := ban_repository.New(db)
 	codeRepository := code_repository.New(db)
 	sessionRepository := session_repository.New(db)
 
 	// services
 	userService := user_service.New(userRepository)
+	banService := ban_service.New(banRepository)
 	codeService := code_service.New(&cfg.SMS, codeRepository)
 	sessionService := session_service.New(sessionRepository)
 
-	useCase := application.New(logger, userService, codeService, sessionService)
+	useCase := application.New(logger, userService, banService, codeService, sessionService)
 
 	grpcServer := grpc.New(useCase)
 

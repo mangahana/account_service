@@ -26,6 +26,8 @@ const (
 	Account_Login_FullMethodName            = "/account_proto.Account/Login"
 	Account_Recovery_FullMethodName         = "/account_proto.Account/Recovery"
 	Account_CompleteRecovery_FullMethodName = "/account_proto.Account/CompleteRecovery"
+	Account_Ban_FullMethodName              = "/account_proto.Account/Ban"
+	Account_UnBan_FullMethodName            = "/account_proto.Account/UnBan"
 )
 
 // AccountClient is the client API for Account service.
@@ -38,6 +40,8 @@ type AccountClient interface {
 	Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*AuthRes, error)
 	Recovery(ctx context.Context, in *RecoveryReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	CompleteRecovery(ctx context.Context, in *CompleteRecoveryReq, opts ...grpc.CallOption) (*AuthRes, error)
+	Ban(ctx context.Context, in *BanReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UnBan(ctx context.Context, in *UnBanReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type accountClient struct {
@@ -108,6 +112,26 @@ func (c *accountClient) CompleteRecovery(ctx context.Context, in *CompleteRecove
 	return out, nil
 }
 
+func (c *accountClient) Ban(ctx context.Context, in *BanReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Account_Ban_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountClient) UnBan(ctx context.Context, in *UnBanReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Account_UnBan_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AccountServer is the server API for Account service.
 // All implementations must embed UnimplementedAccountServer
 // for forward compatibility.
@@ -118,6 +142,8 @@ type AccountServer interface {
 	Login(context.Context, *LoginReq) (*AuthRes, error)
 	Recovery(context.Context, *RecoveryReq) (*emptypb.Empty, error)
 	CompleteRecovery(context.Context, *CompleteRecoveryReq) (*AuthRes, error)
+	Ban(context.Context, *BanReq) (*emptypb.Empty, error)
+	UnBan(context.Context, *UnBanReq) (*emptypb.Empty, error)
 	mustEmbedUnimplementedAccountServer()
 }
 
@@ -145,6 +171,12 @@ func (UnimplementedAccountServer) Recovery(context.Context, *RecoveryReq) (*empt
 }
 func (UnimplementedAccountServer) CompleteRecovery(context.Context, *CompleteRecoveryReq) (*AuthRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CompleteRecovery not implemented")
+}
+func (UnimplementedAccountServer) Ban(context.Context, *BanReq) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Ban not implemented")
+}
+func (UnimplementedAccountServer) UnBan(context.Context, *UnBanReq) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UnBan not implemented")
 }
 func (UnimplementedAccountServer) mustEmbedUnimplementedAccountServer() {}
 func (UnimplementedAccountServer) testEmbeddedByValue()                 {}
@@ -275,6 +307,42 @@ func _Account_CompleteRecovery_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Account_Ban_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BanReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServer).Ban(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Account_Ban_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServer).Ban(ctx, req.(*BanReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Account_UnBan_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UnBanReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServer).UnBan(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Account_UnBan_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServer).UnBan(ctx, req.(*UnBanReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Account_ServiceDesc is the grpc.ServiceDesc for Account service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -305,6 +373,14 @@ var Account_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CompleteRecovery",
 			Handler:    _Account_CompleteRecovery_Handler,
+		},
+		{
+			MethodName: "Ban",
+			Handler:    _Account_Ban_Handler,
+		},
+		{
+			MethodName: "UnBan",
+			Handler:    _Account_UnBan_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

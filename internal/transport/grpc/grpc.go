@@ -5,6 +5,7 @@ import (
 	pb "account/proto"
 	"context"
 	"net"
+	"time"
 
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -101,4 +102,32 @@ func (s *server) CompleteRecovery(c context.Context, req *pb.CompleteRecoveryReq
 	}
 
 	return &pb.AuthRes{AccessToken: session.AccessToken}, nil
+}
+
+func (s *server) Ban(c context.Context, req *pb.BanReq) (*emptypb.Empty, error) {
+	expiry, err := time.Parse(time.RFC3339, req.Expiry)
+
+	if err != nil {
+		return &emptypb.Empty{}, err
+	}
+
+	dto := &dtos.BanInput{
+		CallerUserID: int(req.CallerUserId),
+		UserID:       int(req.UserId),
+		Reason:       req.Reason,
+		Expiry:       expiry,
+	}
+	err = s.useCase.Ban(c, dto)
+
+	return &emptypb.Empty{}, err
+}
+
+func (s *server) UnBan(c context.Context, req *pb.UnBanReq) (*emptypb.Empty, error) {
+	dto := &dtos.UnBanInput{
+		UserID: int(req.UserId),
+		BanID:  int(req.BanId),
+		Reason: req.Reason,
+	}
+	err := s.useCase.UnBan(c, dto)
+	return &emptypb.Empty{}, err
 }

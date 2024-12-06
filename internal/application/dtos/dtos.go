@@ -1,5 +1,7 @@
 package dtos
 
+import "time"
+
 type RegisterInput struct {
 	Phone string `json:"phone"`
 	IP    string // client ip address
@@ -35,4 +37,17 @@ type CompleteRecovery struct {
 	Phone    string `json:"phone"`
 	Code     string `json:"code"`
 	Password string `json:"password"`
+}
+
+type BanInput struct {
+	CallerUserID int
+	UserID       int
+	Reason       string
+	Expiry       time.Time
+}
+
+type UnBanInput struct {
+	UserID int
+	BanID  int
+	Reason string
 }

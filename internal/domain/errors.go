@@ -12,4 +12,11 @@ var (
 	ErrUsernameAlreadyInUse = errors.New("USERNAME_ALREADY_IN_USE")
 	ErrCodeSendingLimit     = errors.New("CODE_SENDING_LIMIT")
 	ErrInvalidCredentials   = errors.New("INVALID_CREDENTIALS")
+
+	// bans
+	ErrBanNotFound         = errors.New("BAN_NOT_FOUND")
+	ErrCantBanYourself     = errors.New("CANT_BAN_YOURSELF")
+	ErrReasonCantBeEmpty   = errors.New("REASON_CANT_BE_EMPTY")
+	ErrExpiryCantBePast    = errors.New("EXPIRY_CANT_BE_PAST")
+	ErrCannotBanHigherUser = errors.New("CANT_BAN_HIGHER_USER")
 )
