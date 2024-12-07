@@ -97,3 +97,18 @@ func TestUpdatePassword(t *testing.T) {
 		assert.NoError(t, err)
 	})
 }
+
+func TestFindOneByAccessToken(t *testing.T) {
+	c, repo := setup(t)
+
+	t.Run("success", func(t *testing.T) {
+		repo.EXPECT().FindOneByAccessToken(c, "token").Return(&domain.User{ID: 1}, nil)
+
+		service := New(repo)
+
+		user, err := service.FindOneByAccessToken(c, "token")
+
+		assert.NoError(t, err)
+		assert.NotZero(t, user)
+	})
+}

@@ -15,6 +15,7 @@ service Account {
   rpc CompleteRecovery(CompleteRecoveryReq) returns (AuthRes) {}
   rpc Ban(BanReq) returns (google.protobuf.Empty) {}
   rpc UnBan(UnBanReq) returns (google.protobuf.Empty) {}
+  rpc Authenticate(AuthenticateReq) returns (AuthenticateRes) {}
 }
 
 message RegisterReq {
@@ -62,5 +63,15 @@ message BanReq {
 message UnBanReq {
   int32  user_id = 1;
   int32  ban_id  = 2;
-  string reason = 3;
+  string reason  = 3;
+}
+
+message AuthenticateReq {
+  string access_token = 1;
+}
+
+message AuthenticateRes {
+  int32           user_id     = 1;
+  repeated string permissions = 2;
+  bool            is_banned   = 3;
 }

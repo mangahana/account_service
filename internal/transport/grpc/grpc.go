@@ -131,3 +131,19 @@ func (s *server) UnBan(c context.Context, req *pb.UnBanReq) (*emptypb.Empty, err
 	err := s.useCase.UnBan(c, dto)
 	return &emptypb.Empty{}, err
 }
+
+func (s *server) Authenticate(c context.Context, req *pb.AuthenticateReq) (*pb.AuthenticateRes, error) {
+	output, err := s.useCase.Authenticate(c, &dtos.AuthenticateInput{
+		AccessToken: req.AccessToken,
+	})
+
+	if err != nil {
+		return &pb.AuthenticateRes{}, err
+	}
+
+	return &pb.AuthenticateRes{
+		UserId:      int32(output.UserID),
+		Permissions: output.Permissions,
+		IsBanned:    output.IsBanned,
+	}, nil
+}

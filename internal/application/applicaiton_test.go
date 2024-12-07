@@ -218,3 +218,22 @@ func TestUnBan(t *testing.T) {
 		assert.NoError(t, err)
 	})
 }
+
+func TestAuthenticate(t *testing.T) {
+	c, logger, userService, banService, codeService, sessionService := setup(t)
+
+	t.Run("success", func(t *testing.T) {
+		user := &domain.User{
+			ID:   1,
+			Role: &domain.Role{Permissions: []string{}},
+		}
+		userService.EXPECT().FindOneByAccessToken(c, "token").Return(user, nil)
+		banService.EXPECT().IsUserBanned(c, 1).Return(false, nil)
+
+		app := New(logger, userService, banService, codeService, sessionService)
+		output, err := app.Authenticate(c, &dtos.AuthenticateInput{AccessToken: "token"})
+
+		assert.NoError(t, err)
+		assert.NotZero(t, output)
+	})
+}

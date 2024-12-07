@@ -13,6 +13,7 @@ type Repository interface {
 	FindOneByPhone(c context.Context, phone string) (*domain.User, error)
 	FindOneByUsername(c context.Context, username string) (*domain.User, error)
 	FindOneByID(c context.Context, userId int) (*domain.User, error)
+	FindOneByAccessToken(c context.Context, accessToken string) (*domain.User, error)
 
 	Create(c context.Context, user *domain.User) (int, error)
 	Save(c context.Context, user *domain.User) error
@@ -51,6 +52,18 @@ func (s *service) Create(c context.Context, username, phone, password string) (i
 	}
 
 	return s.repo.Create(c, user)
+}
+
+func (s *service) FindOneByAccessToken(c context.Context, accessToken string) (*domain.User, error) {
+	user, err := s.repo.FindOneByAccessToken(c, accessToken)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, domain.ErrUserNotFound
+		}
+		return nil, err
+	}
+
+	return user, nil
 }
 
 func (s *service) FindOneByPhone(c context.Context, phone string) (*domain.User, error) {

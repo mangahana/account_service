@@ -13,6 +13,7 @@ import (
 type UserService interface {
 	FindOneByID(c context.Context, ID int) (*domain.User, error)
 	FindOneByPhone(c context.Context, phone string) (*domain.User, error)
+	FindOneByAccessToken(c context.Context, accessToken string) (*domain.User, error)
 
 	IsPhoneExists(c context.Context, phone string) (bool, error)
 
@@ -25,6 +26,7 @@ type BanService interface {
 	Ban(c context.Context, callerId, userId int, reason string, expiry time.Time) error
 	UnBan(c context.Context, banId, unBannedByID int, reason string) error
 
+	IsUserBanned(c context.Context, userId int) (bool, error)
 	FindOneByID(c context.Context, id int) (*domain.Ban, error)
 }
 
@@ -241,4 +243,24 @@ func (app *app) UnBan(c context.Context, dto *dtos.UnBanInput) error {
 	}
 
 	return nil
+}
+
+func (app *app) Authenticate(c context.Context, dto *dtos.AuthenticateInput) (*dtos.AuthenticateOutput, error) {
+	user, err := app.userService.FindOneByAccessToken(c, dto.AccessToken)
+	if err != nil {
+		app.logger.Error("failed to find user by access token", zap.Error(err))
+		return &dtos.AuthenticateOutput{}, err
+	}
+
+	isBanned, err := app.banService.IsUserBanned(c, user.ID)
+	if err != nil {
+		app.logger.Error("failed to check is_banned", zap.Error(err))
+		return &dtos.AuthenticateOutput{}, err
+	}
+
+	return &dtos.AuthenticateOutput{
+		UserID:      user.ID,
+		Permissions: user.Role.Permissions,
+		IsBanned:    isBanned,
+	}, nil
 }

@@ -118,3 +118,19 @@ func TestSave(t *testing.T) {
 		assert.NoError(t, err)
 	})
 }
+
+func TestFindOneByAccessToken(t *testing.T) {
+	c, db := setup(t)
+
+	t.Run("success", func(t *testing.T) {
+		db.Exec(c, "INSERT INTO users (id, username, phone, password) VALUES (77,'wasd', '7779998866', 'oldpass');")
+		db.Exec(c, "INSERT INTO sessions (access_token, user_id) VALUES ('randomtoken', 77);")
+
+		repo := New(db)
+
+		user, err := repo.FindOneByAccessToken(c, "randomtoken")
+
+		assert.NoError(t, err)
+		assert.NotZero(t, user)
+	})
+}

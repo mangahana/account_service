@@ -69,6 +69,33 @@ func (r *repo) FindOneByUsername(c context.Context, username string) (*domain.Us
 	return &u, nil
 }
 
+func (r *repo) FindOneByAccessToken(c context.Context, accessToken string) (*domain.User, error) {
+	var u domain.User
+
+	var role domain.Role
+
+	sql := `
+	SELECT id, username, phone, password, photo, description, created_at, role_id,
+		(SELECT name FROM roles WHERE id = role_id) as role_name,
+		(SELECT permissions FROM roles WHERE id = role_id) as role_permissions
+	FROM users WHERE id = (SELECT user_id FROM sessions WHERE access_token = $1);
+	`
+
+	row := r.db.QueryRow(c, sql, accessToken)
+	err := row.Scan(
+		&u.ID, &u.Username, &u.Phone, &u.Password,
+		&u.Photo, &u.Description, &u.CreatedAt,
+		&role.ID, &role.Name, &role.Permissions,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	u.Role = &role
+
+	return &u, nil
+}
+
 func (r *repo) FindOneByID(c context.Context, userId int) (*domain.User, error) {
 	var u domain.User
 

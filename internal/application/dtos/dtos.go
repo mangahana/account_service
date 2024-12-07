@@ -51,3 +51,13 @@ type UnBanInput struct {
 	BanID  int
 	Reason string
 }
+
+type AuthenticateInput struct {
+	AccessToken string
+}
+
+type AuthenticateOutput struct {
+	UserID      int
+	Permissions []string
+	IsBanned    bool
+}

@@ -58,6 +58,21 @@ func (mr *MockUserServiceMockRecorder) Create(c, username, phone, password any) 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockUserService)(nil).Create), c, username, phone, password)
 }
 
+// FindOneByAccessToken mocks base method.
+func (m *MockUserService) FindOneByAccessToken(c context.Context, accessToken string) (*domain.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindOneByAccessToken", c, accessToken)
+	ret0, _ := ret[0].(*domain.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindOneByAccessToken indicates an expected call of FindOneByAccessToken.
+func (mr *MockUserServiceMockRecorder) FindOneByAccessToken(c, accessToken any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindOneByAccessToken", reflect.TypeOf((*MockUserService)(nil).FindOneByAccessToken), c, accessToken)
+}
+
 // FindOneByID mocks base method.
 func (m *MockUserService) FindOneByID(c context.Context, ID int) (*domain.User, error) {
 	m.ctrl.T.Helper()
@@ -155,21 +170,6 @@ func (mr *MockBanServiceMockRecorder) Ban(c, callerId, userId, reason, expiry an
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Ban", reflect.TypeOf((*MockBanService)(nil).Ban), c, callerId, userId, reason, expiry)
 }
 
-// FindByUserID mocks base method.
-func (m *MockBanService) FindByUserID(c context.Context, userId int) ([]domain.Ban, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindByUserID", c, userId)
-	ret0, _ := ret[0].([]domain.Ban)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// FindByUserID indicates an expected call of FindByUserID.
-func (mr *MockBanServiceMockRecorder) FindByUserID(c, userId any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByUserID", reflect.TypeOf((*MockBanService)(nil).FindByUserID), c, userId)
-}
-
 // FindOneByID mocks base method.
 func (m *MockBanService) FindOneByID(c context.Context, id int) (*domain.Ban, error) {
 	m.ctrl.T.Helper()
@@ -183,6 +183,21 @@ func (m *MockBanService) FindOneByID(c context.Context, id int) (*domain.Ban, er
 func (mr *MockBanServiceMockRecorder) FindOneByID(c, id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindOneByID", reflect.TypeOf((*MockBanService)(nil).FindOneByID), c, id)
+}
+
+// IsUserBanned mocks base method.
+func (m *MockBanService) IsUserBanned(c context.Context, userId int) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IsUserBanned", c, userId)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// IsUserBanned indicates an expected call of IsUserBanned.
+func (mr *MockBanServiceMockRecorder) IsUserBanned(c, userId any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsUserBanned", reflect.TypeOf((*MockBanService)(nil).IsUserBanned), c, userId)
 }
 
 // UnBan mocks base method.

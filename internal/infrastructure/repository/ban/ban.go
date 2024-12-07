@@ -60,3 +60,10 @@ func (r *repo) CreateUnban(c context.Context, banId, userId int, reason string) 
 	_, err := r.db.Exec(c, sql, banId, userId, reason)
 	return err
 }
+
+func (r *repo) GetActiveBansCount(c context.Context, userId int) (int, error) {
+	var count int
+	sql := "SELECT COUNT(id) FROM bans WHERE user_id = $1 AND is_active = true;"
+	err := r.db.QueryRow(c, sql, userId).Scan(&count)
+	return count, err
+}

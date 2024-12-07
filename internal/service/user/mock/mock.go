@@ -56,6 +56,21 @@ func (mr *MockRepositoryMockRecorder) Create(c, user any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockRepository)(nil).Create), c, user)
 }
 
+// FindOneByAccessToken mocks base method.
+func (m *MockRepository) FindOneByAccessToken(c context.Context, accessToken string) (*domain.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindOneByAccessToken", c, accessToken)
+	ret0, _ := ret[0].(*domain.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindOneByAccessToken indicates an expected call of FindOneByAccessToken.
+func (mr *MockRepositoryMockRecorder) FindOneByAccessToken(c, accessToken any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindOneByAccessToken", reflect.TypeOf((*MockRepository)(nil).FindOneByAccessToken), c, accessToken)
+}
+
 // FindOneByID mocks base method.
 func (m *MockRepository) FindOneByID(c context.Context, userId int) (*domain.User, error) {
 	m.ctrl.T.Helper()

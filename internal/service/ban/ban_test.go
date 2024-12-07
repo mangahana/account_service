@@ -72,3 +72,18 @@ func TestFindOneByID(t *testing.T) {
 		assert.NotZero(t, ban)
 	})
 }
+
+func TestIsUserBanned(t *testing.T) {
+	c, repo := setup(t)
+
+	t.Run("success", func(t *testing.T) {
+		repo.EXPECT().GetActiveBansCount(c, 1).Return(0, nil)
+
+		service := New(repo)
+
+		isBanned, err := service.IsUserBanned(c, 1)
+
+		assert.NoError(t, err)
+		assert.False(t, isBanned)
+	})
+}

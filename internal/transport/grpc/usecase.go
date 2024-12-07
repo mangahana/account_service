@@ -14,4 +14,5 @@ type UseCase interface {
 	Recovery(c context.Context, dto *dtos.RecoveryInput) error
 	Ban(c context.Context, dto *dtos.BanInput) error
 	UnBan(c context.Context, dto *dtos.UnBanInput) error
+	Authenticate(c context.Context, dto *dtos.AuthenticateInput) (*dtos.AuthenticateOutput, error)
 }

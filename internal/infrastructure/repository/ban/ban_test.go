@@ -66,3 +66,16 @@ func TestCreateUnban(t *testing.T) {
 		assert.NoError(t, err)
 	})
 }
+
+func TestGetActiveBansCount(t *testing.T) {
+	c, db := setup(t)
+
+	t.Run("success", func(t *testing.T) {
+		repo := New(db)
+
+		count, err := repo.GetActiveBansCount(c, 1)
+
+		assert.NoError(t, err)
+		assert.Zero(t, count)
+	})
+}

@@ -10,6 +10,8 @@ import (
 type Repository interface {
 	FindOneByID(c context.Context, id int) (*domain.Ban, error)
 
+	GetActiveBansCount(c context.Context, userId int) (int, error)
+
 	Save(c context.Context, ban *domain.Ban) error
 
 	Create(c context.Context, ban *domain.Ban) error
@@ -63,4 +65,13 @@ func (s *service) FindOneByID(c context.Context, id int) (*domain.Ban, error) {
 	}
 
 	return ban, nil
+}
+
+func (s *service) IsUserBanned(c context.Context, userId int) (bool, error) {
+	count, err := s.repo.GetActiveBansCount(c, userId)
+	if err != nil {
+		return false, err
+	}
+
+	return count > 0, nil
 }

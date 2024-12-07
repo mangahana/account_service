@@ -84,6 +84,21 @@ func (mr *MockRepositoryMockRecorder) FindOneByID(c, id any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindOneByID", reflect.TypeOf((*MockRepository)(nil).FindOneByID), c, id)
 }
 
+// GetActiveBansCount mocks base method.
+func (m *MockRepository) GetActiveBansCount(c context.Context, userId int) (int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetActiveBansCount", c, userId)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetActiveBansCount indicates an expected call of GetActiveBansCount.
+func (mr *MockRepositoryMockRecorder) GetActiveBansCount(c, userId any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetActiveBansCount", reflect.TypeOf((*MockRepository)(nil).GetActiveBansCount), c, userId)
+}
+
 // Save mocks base method.
 func (m *MockRepository) Save(c context.Context, ban *domain.Ban) error {
 	m.ctrl.T.Helper()
