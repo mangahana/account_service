@@ -53,3 +53,17 @@ func (mr *MockRepositoryMockRecorder) Create(c, userId, accessToken any) *gomock
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockRepository)(nil).Create), c, userId, accessToken)
 }
+
+// DeleteAll mocks base method.
+func (m *MockRepository) DeleteAll(c context.Context, userId int) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteAll", c, userId)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteAll indicates an expected call of DeleteAll.
+func (mr *MockRepositoryMockRecorder) DeleteAll(c, userId any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAll", reflect.TypeOf((*MockRepository)(nil).DeleteAll), c, userId)
+}

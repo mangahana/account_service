@@ -1,6 +1,9 @@
 package dtos
 
-import "time"
+import (
+	"account/internal/domain"
+	"time"
+)
 
 type RegisterInput struct {
 	Phone string `json:"phone"`
@@ -57,7 +60,57 @@ type AuthenticateInput struct {
 }
 
 type AuthenticateOutput struct {
+	UserID   int
+	IsBanned bool
+	Role     domain.Role
+}
+
+type UserOutput struct {
+	ID          int
+	Username    string
+	Photo       string
+	Description string
+	Role        domain.Role
+}
+
+func NewUserOutput(id int, username, photo, description string, role domain.Role) *UserOutput {
+	return &UserOutput{
+		ID:          id,
+		Username:    username,
+		Photo:       photo,
+		Description: description,
+		Role:        role,
+	}
+}
+
+type FindByUsernameInput struct {
+	Username string
+}
+
+type FindByIDInput struct {
+	ID int
+}
+
+type IsPhoneExistsInput struct {
+	Phone string
+}
+
+type ChangePasswordInput struct {
 	UserID      int
-	Permissions []string
-	IsBanned    bool
+	OldPassword string
+	NewPassword string
+	Logout      bool
+}
+
+type UploadImageInput struct {
+	UserID int
+	File   []byte
+}
+
+type UploadImageOutput struct {
+	Filename string
+}
+
+type RemovePhotoInput struct {
+	UserID int
 }

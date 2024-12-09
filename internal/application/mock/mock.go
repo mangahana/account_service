@@ -43,6 +43,20 @@ func (m *MockUserService) EXPECT() *MockUserServiceMockRecorder {
 	return m.recorder
 }
 
+// ChangePassword mocks base method.
+func (m *MockUserService) ChangePassword(c context.Context, userId int, oldPassword, newPassword string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ChangePassword", c, userId, oldPassword, newPassword)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ChangePassword indicates an expected call of ChangePassword.
+func (mr *MockUserServiceMockRecorder) ChangePassword(c, userId, oldPassword, newPassword any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ChangePassword", reflect.TypeOf((*MockUserService)(nil).ChangePassword), c, userId, oldPassword, newPassword)
+}
+
 // Create mocks base method.
 func (m *MockUserService) Create(c context.Context, username, phone, password string) (int, error) {
 	m.ctrl.T.Helper()
@@ -103,6 +117,21 @@ func (mr *MockUserServiceMockRecorder) FindOneByPhone(c, phone any) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindOneByPhone", reflect.TypeOf((*MockUserService)(nil).FindOneByPhone), c, phone)
 }
 
+// FindOneByUsername mocks base method.
+func (m *MockUserService) FindOneByUsername(c context.Context, username string) (*domain.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindOneByUsername", c, username)
+	ret0, _ := ret[0].(*domain.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindOneByUsername indicates an expected call of FindOneByUsername.
+func (mr *MockUserServiceMockRecorder) FindOneByUsername(c, username any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindOneByUsername", reflect.TypeOf((*MockUserService)(nil).FindOneByUsername), c, username)
+}
+
 // IsPhoneExists mocks base method.
 func (m *MockUserService) IsPhoneExists(c context.Context, phone string) (bool, error) {
 	m.ctrl.T.Helper()
@@ -130,6 +159,21 @@ func (m *MockUserService) UpdatePassword(c context.Context, userId int, password
 func (mr *MockUserServiceMockRecorder) UpdatePassword(c, userId, password any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePassword", reflect.TypeOf((*MockUserService)(nil).UpdatePassword), c, userId, password)
+}
+
+// UpdatePhoto mocks base method.
+func (m *MockUserService) UpdatePhoto(c context.Context, userId int, filename string) (*domain.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdatePhoto", c, userId, filename)
+	ret0, _ := ret[0].(*domain.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdatePhoto indicates an expected call of UpdatePhoto.
+func (mr *MockUserServiceMockRecorder) UpdatePhoto(c, userId, filename any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePhoto", reflect.TypeOf((*MockUserService)(nil).UpdatePhoto), c, userId, filename)
 }
 
 // MockBanService is a mock of BanService interface.
@@ -304,6 +348,20 @@ func (m *MockSessionService) EXPECT() *MockSessionServiceMockRecorder {
 	return m.recorder
 }
 
+// Clear mocks base method.
+func (m *MockSessionService) Clear(c context.Context, userId int) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Clear", c, userId)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Clear indicates an expected call of Clear.
+func (mr *MockSessionServiceMockRecorder) Clear(c, userId any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Clear", reflect.TypeOf((*MockSessionService)(nil).Clear), c, userId)
+}
+
 // Create mocks base method.
 func (m *MockSessionService) Create(c context.Context, userId int) (*dtos.AuthOutput, error) {
 	m.ctrl.T.Helper()
@@ -317,4 +375,57 @@ func (m *MockSessionService) Create(c context.Context, userId int) (*dtos.AuthOu
 func (mr *MockSessionServiceMockRecorder) Create(c, userId any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockSessionService)(nil).Create), c, userId)
+}
+
+// MockStorageService is a mock of StorageService interface.
+type MockStorageService struct {
+	ctrl     *gomock.Controller
+	recorder *MockStorageServiceMockRecorder
+	isgomock struct{}
+}
+
+// MockStorageServiceMockRecorder is the mock recorder for MockStorageService.
+type MockStorageServiceMockRecorder struct {
+	mock *MockStorageService
+}
+
+// NewMockStorageService creates a new mock instance.
+func NewMockStorageService(ctrl *gomock.Controller) *MockStorageService {
+	mock := &MockStorageService{ctrl: ctrl}
+	mock.recorder = &MockStorageServiceMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockStorageService) EXPECT() *MockStorageServiceMockRecorder {
+	return m.recorder
+}
+
+// Put mocks base method.
+func (m *MockStorageService) Put(c context.Context, data []byte) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Put", c, data)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Put indicates an expected call of Put.
+func (mr *MockStorageServiceMockRecorder) Put(c, data any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Put", reflect.TypeOf((*MockStorageService)(nil).Put), c, data)
+}
+
+// Remove mocks base method.
+func (m *MockStorageService) Remove(c context.Context, filename string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Remove", c, filename)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Remove indicates an expected call of Remove.
+func (mr *MockStorageServiceMockRecorder) Remove(c, filename any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Remove", reflect.TypeOf((*MockStorageService)(nil).Remove), c, filename)
 }

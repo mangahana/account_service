@@ -16,8 +16,8 @@ type Role struct {
 	Permissions []string
 }
 
-func NewUserRole() *Role {
-	return &Role{
+func NewUserRole() Role {
+	return Role{
 		ID:          UserRole,
 		Name:        "Қолданушы",
 		Permissions: []string{},

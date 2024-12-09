@@ -12,9 +12,9 @@ type User struct {
 	Username    string
 	Phone       string
 	Password    string
-	Photo       *string
-	Description *string
-	Role        *Role
+	Photo       string
+	Description string
+	Role        Role
 	CreatedAt   time.Time
 }
 
@@ -62,4 +62,27 @@ func (u *User) SetPassword(password string) error {
 	u.Password = string(hashedPassword)
 
 	return nil
+}
+
+func (u *User) ChangePassword(oldPassword, newPassword string) error {
+	if err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(oldPassword)); err != nil {
+		return ErrInvalidPassword
+	}
+
+	if len(newPassword) < 8 {
+		return ErrTooShortPassword
+	}
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), 10)
+	if err != nil {
+		return err
+	}
+
+	u.Password = string(hashedPassword)
+
+	return nil
+}
+
+func (u *User) SetPhoto(filename string) {
+	u.Photo = filename
 }

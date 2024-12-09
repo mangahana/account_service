@@ -37,7 +37,7 @@ func (r *repo) FindOneByPhone(c context.Context, phone string) (*domain.User, er
 		return nil, err
 	}
 
-	u.Role = &role
+	u.Role = role
 
 	return &u, nil
 }
@@ -64,7 +64,7 @@ func (r *repo) FindOneByUsername(c context.Context, username string) (*domain.Us
 		return nil, err
 	}
 
-	u.Role = &role
+	u.Role = role
 
 	return &u, nil
 }
@@ -91,7 +91,7 @@ func (r *repo) FindOneByAccessToken(c context.Context, accessToken string) (*dom
 		return nil, err
 	}
 
-	u.Role = &role
+	u.Role = role
 
 	return &u, nil
 }
@@ -118,7 +118,7 @@ func (r *repo) FindOneByID(c context.Context, userId int) (*domain.User, error) 
 		return nil, err
 	}
 
-	u.Role = &role
+	u.Role = role
 
 	return &u, nil
 }

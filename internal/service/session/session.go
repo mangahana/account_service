@@ -2,15 +2,14 @@ package session
 
 import (
 	"account/internal/application/dtos"
+	"account/internal/common"
 	"context"
-	"crypto/rand"
-	"crypto/sha256"
-	"encoding/hex"
 )
 
 //go:generate mockgen -source ./session.go -destination ./mock/mock.go -package mock
 type Repository interface {
 	Create(c context.Context, userId int, accessToken string) error
+	DeleteAll(c context.Context, userId int) error
 }
 
 type service struct {
@@ -24,7 +23,7 @@ func New(repo Repository) *service {
 func (s *service) Create(c context.Context, userId int) (*dtos.AuthOutput, error) {
 	var output dtos.AuthOutput
 
-	accessToken, err := s.generateRandomToken()
+	accessToken, err := common.GenerateRandomHash()
 	if err != nil {
 		return nil, err
 	}
@@ -35,13 +34,6 @@ func (s *service) Create(c context.Context, userId int) (*dtos.AuthOutput, error
 	return &output, err
 }
 
-func (s *service) generateRandomToken() (string, error) {
-	randomData := make([]byte, 256)
-	_, err := rand.Read(randomData)
-	if err != nil {
-		return "", err
-	}
-
-	hash := sha256.Sum256(randomData)
-	return hex.EncodeToString(hash[:]), nil
+func (r *service) Clear(c context.Context, userId int) error {
+	return r.repo.DeleteAll(c, userId)
 }

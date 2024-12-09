@@ -142,8 +142,88 @@ func (s *server) Authenticate(c context.Context, req *pb.AuthenticateReq) (*pb.A
 	}
 
 	return &pb.AuthenticateRes{
-		UserId:      int32(output.UserID),
-		Permissions: output.Permissions,
-		IsBanned:    output.IsBanned,
+		UserId: int32(output.UserID),
+		Role: &pb.Role{
+			Id:          int32(output.Role.ID),
+			Name:        output.Role.Name,
+			Permissions: output.Role.Permissions,
+		},
+		IsBanned: output.IsBanned,
 	}, nil
+}
+
+func (s *server) FindByID(c context.Context, req *pb.FindByIDReq) (*pb.UserRes, error) {
+	user, err := s.useCase.FindByID(c, &dtos.FindByIDInput{ID: int(req.Id)})
+	if err != nil {
+		return &pb.UserRes{}, err
+	}
+	return &pb.UserRes{
+		Id:          int32(user.ID),
+		Username:    user.Username,
+		Photo:       user.Photo,
+		Description: user.Description,
+		Role: &pb.Role{
+			Id:          int32(user.Role.ID),
+			Name:        user.Role.Name,
+			Permissions: user.Role.Permissions,
+		},
+	}, nil
+}
+
+func (s *server) FindByUsername(c context.Context, req *pb.FindByUsernameReq) (*pb.UserRes, error) {
+	user, err := s.useCase.FindByUsername(c, &dtos.FindByUsernameInput{Username: req.Username})
+	if err != nil {
+		return &pb.UserRes{}, err
+	}
+	return &pb.UserRes{
+		Id:          int32(user.ID),
+		Username:    user.Username,
+		Photo:       user.Photo,
+		Description: user.Description,
+		Role: &pb.Role{
+			Id:          int32(user.Role.ID),
+			Name:        user.Role.Name,
+			Permissions: user.Role.Permissions,
+		},
+	}, nil
+}
+
+func (s *server) IsPhoneExists(c context.Context, req *pb.IsPhoneExistsReq) (*emptypb.Empty, error) {
+	err := s.useCase.IsPhoneExists(c, &dtos.IsPhoneExistsInput{Phone: req.Phone})
+	return &emptypb.Empty{}, err
+}
+
+func (s *server) ChangePassword(c context.Context, req *pb.ChangePasswordReq) (*pb.AuthRes, error) {
+	res, err := s.useCase.ChangePassword(c, &dtos.ChangePasswordInput{
+		UserID:      int(req.UserId),
+		OldPassword: req.OldPassword,
+		NewPassword: req.NewPassword,
+		Logout:      req.Logout,
+	})
+	if err != nil {
+		return &pb.AuthRes{}, err
+	}
+
+	return &pb.AuthRes{
+		AccessToken: res.AccessToken,
+	}, nil
+}
+
+func (s *server) UpdatePhoto(c context.Context, req *pb.UpdatePhotoReq) (*pb.UpdatePhotoRes, error) {
+	photo, err := s.useCase.UploadImage(c, &dtos.UploadImageInput{
+		UserID: int(req.UserId),
+		File:   req.File,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.UpdatePhotoRes{
+		Photo: photo.Filename,
+	}, nil
+}
+
+func (s *server) RemovePhoto(c context.Context, req *pb.RemovePhotoReq) (*emptypb.Empty, error) {
+	err := s.useCase.RemoveImage(c, &dtos.RemovePhotoInput{UserID: int(req.UserId)})
+	return &emptypb.Empty{}, err
 }

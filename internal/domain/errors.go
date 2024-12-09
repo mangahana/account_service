@@ -12,6 +12,8 @@ var (
 	ErrUsernameAlreadyInUse = errors.New("USERNAME_ALREADY_IN_USE")
 	ErrCodeSendingLimit     = errors.New("CODE_SENDING_LIMIT")
 	ErrInvalidCredentials   = errors.New("INVALID_CREDENTIALS")
+	ErrInvalidPassword      = errors.New("INVALID_PASSWORD")
+	ErrUnsupportedFormat    = errors.New("UNSUPPORTED_FORMAT")
 
 	// bans
 	ErrBanNotFound         = errors.New("BAN_NOT_FOUND")

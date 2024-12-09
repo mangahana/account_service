@@ -29,6 +29,12 @@ const (
 	Account_Ban_FullMethodName              = "/account_proto.Account/Ban"
 	Account_UnBan_FullMethodName            = "/account_proto.Account/UnBan"
 	Account_Authenticate_FullMethodName     = "/account_proto.Account/Authenticate"
+	Account_FindByID_FullMethodName         = "/account_proto.Account/FindByID"
+	Account_FindByUsername_FullMethodName   = "/account_proto.Account/FindByUsername"
+	Account_IsPhoneExists_FullMethodName    = "/account_proto.Account/IsPhoneExists"
+	Account_ChangePassword_FullMethodName   = "/account_proto.Account/ChangePassword"
+	Account_UpdatePhoto_FullMethodName      = "/account_proto.Account/UpdatePhoto"
+	Account_RemovePhoto_FullMethodName      = "/account_proto.Account/RemovePhoto"
 )
 
 // AccountClient is the client API for Account service.
@@ -44,6 +50,12 @@ type AccountClient interface {
 	Ban(ctx context.Context, in *BanReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UnBan(ctx context.Context, in *UnBanReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Authenticate(ctx context.Context, in *AuthenticateReq, opts ...grpc.CallOption) (*AuthenticateRes, error)
+	FindByID(ctx context.Context, in *FindByIDReq, opts ...grpc.CallOption) (*UserRes, error)
+	FindByUsername(ctx context.Context, in *FindByUsernameReq, opts ...grpc.CallOption) (*UserRes, error)
+	IsPhoneExists(ctx context.Context, in *IsPhoneExistsReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ChangePassword(ctx context.Context, in *ChangePasswordReq, opts ...grpc.CallOption) (*AuthRes, error)
+	UpdatePhoto(ctx context.Context, in *UpdatePhotoReq, opts ...grpc.CallOption) (*UpdatePhotoRes, error)
+	RemovePhoto(ctx context.Context, in *RemovePhotoReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type accountClient struct {
@@ -144,6 +156,66 @@ func (c *accountClient) Authenticate(ctx context.Context, in *AuthenticateReq, o
 	return out, nil
 }
 
+func (c *accountClient) FindByID(ctx context.Context, in *FindByIDReq, opts ...grpc.CallOption) (*UserRes, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserRes)
+	err := c.cc.Invoke(ctx, Account_FindByID_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountClient) FindByUsername(ctx context.Context, in *FindByUsernameReq, opts ...grpc.CallOption) (*UserRes, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserRes)
+	err := c.cc.Invoke(ctx, Account_FindByUsername_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountClient) IsPhoneExists(ctx context.Context, in *IsPhoneExistsReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Account_IsPhoneExists_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountClient) ChangePassword(ctx context.Context, in *ChangePasswordReq, opts ...grpc.CallOption) (*AuthRes, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AuthRes)
+	err := c.cc.Invoke(ctx, Account_ChangePassword_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountClient) UpdatePhoto(ctx context.Context, in *UpdatePhotoReq, opts ...grpc.CallOption) (*UpdatePhotoRes, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdatePhotoRes)
+	err := c.cc.Invoke(ctx, Account_UpdatePhoto_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountClient) RemovePhoto(ctx context.Context, in *RemovePhotoReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Account_RemovePhoto_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AccountServer is the server API for Account service.
 // All implementations must embed UnimplementedAccountServer
 // for forward compatibility.
@@ -157,6 +229,12 @@ type AccountServer interface {
 	Ban(context.Context, *BanReq) (*emptypb.Empty, error)
 	UnBan(context.Context, *UnBanReq) (*emptypb.Empty, error)
 	Authenticate(context.Context, *AuthenticateReq) (*AuthenticateRes, error)
+	FindByID(context.Context, *FindByIDReq) (*UserRes, error)
+	FindByUsername(context.Context, *FindByUsernameReq) (*UserRes, error)
+	IsPhoneExists(context.Context, *IsPhoneExistsReq) (*emptypb.Empty, error)
+	ChangePassword(context.Context, *ChangePasswordReq) (*AuthRes, error)
+	UpdatePhoto(context.Context, *UpdatePhotoReq) (*UpdatePhotoRes, error)
+	RemovePhoto(context.Context, *RemovePhotoReq) (*emptypb.Empty, error)
 	mustEmbedUnimplementedAccountServer()
 }
 
@@ -193,6 +271,24 @@ func (UnimplementedAccountServer) UnBan(context.Context, *UnBanReq) (*emptypb.Em
 }
 func (UnimplementedAccountServer) Authenticate(context.Context, *AuthenticateReq) (*AuthenticateRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Authenticate not implemented")
+}
+func (UnimplementedAccountServer) FindByID(context.Context, *FindByIDReq) (*UserRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindByID not implemented")
+}
+func (UnimplementedAccountServer) FindByUsername(context.Context, *FindByUsernameReq) (*UserRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindByUsername not implemented")
+}
+func (UnimplementedAccountServer) IsPhoneExists(context.Context, *IsPhoneExistsReq) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IsPhoneExists not implemented")
+}
+func (UnimplementedAccountServer) ChangePassword(context.Context, *ChangePasswordReq) (*AuthRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChangePassword not implemented")
+}
+func (UnimplementedAccountServer) UpdatePhoto(context.Context, *UpdatePhotoReq) (*UpdatePhotoRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePhoto not implemented")
+}
+func (UnimplementedAccountServer) RemovePhoto(context.Context, *RemovePhotoReq) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemovePhoto not implemented")
 }
 func (UnimplementedAccountServer) mustEmbedUnimplementedAccountServer() {}
 func (UnimplementedAccountServer) testEmbeddedByValue()                 {}
@@ -377,6 +473,114 @@ func _Account_Authenticate_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Account_FindByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FindByIDReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServer).FindByID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Account_FindByID_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServer).FindByID(ctx, req.(*FindByIDReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Account_FindByUsername_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FindByUsernameReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServer).FindByUsername(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Account_FindByUsername_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServer).FindByUsername(ctx, req.(*FindByUsernameReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Account_IsPhoneExists_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IsPhoneExistsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServer).IsPhoneExists(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Account_IsPhoneExists_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServer).IsPhoneExists(ctx, req.(*IsPhoneExistsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Account_ChangePassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChangePasswordReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServer).ChangePassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Account_ChangePassword_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServer).ChangePassword(ctx, req.(*ChangePasswordReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Account_UpdatePhoto_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePhotoReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServer).UpdatePhoto(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Account_UpdatePhoto_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServer).UpdatePhoto(ctx, req.(*UpdatePhotoReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Account_RemovePhoto_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemovePhotoReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServer).RemovePhoto(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Account_RemovePhoto_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServer).RemovePhoto(ctx, req.(*RemovePhotoReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Account_ServiceDesc is the grpc.ServiceDesc for Account service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -419,6 +623,30 @@ var Account_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Authenticate",
 			Handler:    _Account_Authenticate_Handler,
+		},
+		{
+			MethodName: "FindByID",
+			Handler:    _Account_FindByID_Handler,
+		},
+		{
+			MethodName: "FindByUsername",
+			Handler:    _Account_FindByUsername_Handler,
+		},
+		{
+			MethodName: "IsPhoneExists",
+			Handler:    _Account_IsPhoneExists_Handler,
+		},
+		{
+			MethodName: "ChangePassword",
+			Handler:    _Account_ChangePassword_Handler,
+		},
+		{
+			MethodName: "UpdatePhoto",
+			Handler:    _Account_UpdatePhoto_Handler,
+		},
+		{
+			MethodName: "RemovePhoto",
+			Handler:    _Account_RemovePhoto_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

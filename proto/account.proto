@@ -16,8 +16,60 @@ service Account {
   rpc Ban(BanReq) returns (google.protobuf.Empty) {}
   rpc UnBan(UnBanReq) returns (google.protobuf.Empty) {}
   rpc Authenticate(AuthenticateReq) returns (AuthenticateRes) {}
+  rpc FindByID(FindByIDReq) returns (UserRes) {}
+  rpc FindByUsername(FindByUsernameReq) returns (UserRes) {}
+  rpc IsPhoneExists(IsPhoneExistsReq) returns (google.protobuf.Empty) {}
+  rpc ChangePassword(ChangePasswordReq) returns (AuthRes) {}
+  rpc UpdatePhoto(UpdatePhotoReq) returns (UpdatePhotoRes){}
+  rpc RemovePhoto(RemovePhotoReq) returns (google.protobuf.Empty) {}
 }
 
+message RemovePhotoReq {
+  int32 user_id = 1;
+}
+
+message UpdatePhotoReq {
+  int32 user_id = 1;
+  bytes file   = 2;
+}
+
+message UpdatePhotoRes {
+  string photo = 1;
+}
+
+message ChangePasswordReq {
+  int32  user_id      = 1; 
+  string old_password = 2;
+  string new_password = 3;
+  bool   logout       = 4;
+}
+
+message IsPhoneExistsReq {
+  string phone = 1;
+}
+
+message FindByIDReq {
+  int32 id = 1;
+}
+
+message FindByUsernameReq {
+  string username = 1;
+}
+
+message Role {
+  int32                    id = 1;
+  string                 name = 2;
+  repeated string permissions = 3;
+}
+
+message UserRes {
+  int32  id          = 1;
+  string username    = 2;
+  string photo       = 3;
+  string description = 4;
+  Role   role        = 5;
+}
+ 
 message RegisterReq {
   string phone = 1;
 }
@@ -28,8 +80,8 @@ message ConfirmCodeReq {
 }
 
 message CompleteRegisterReq {
-  string phone = 1;
-  string code = 2;
+  string phone    = 1;
+  string code     = 2;
   string username = 3;
   string password = 4;
 }
@@ -71,7 +123,7 @@ message AuthenticateReq {
 }
 
 message AuthenticateRes {
-  int32           user_id     = 1;
-  repeated string permissions = 2;
-  bool            is_banned   = 3;
+  int32 user_id   = 1;
+  bool  is_banned = 2;
+  Role  role      = 3;
 }

@@ -19,3 +19,9 @@ func (r *repo) Create(c context.Context, userId int, accessToken string) error {
 	_, err := r.db.Exec(c, sql, userId, accessToken)
 	return err
 }
+
+func (r *repo) DeleteAll(c context.Context, userId int) error {
+	sql := "DELETE FROM sessions WHERE user_id = $1;"
+	_, err := r.db.Exec(c, sql, userId)
+	return err
+}

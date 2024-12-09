@@ -12,6 +12,7 @@ import (
 	ban_service "account/internal/service/ban"
 	code_service "account/internal/service/code"
 	session_service "account/internal/service/session"
+	storage_service "account/internal/service/storage"
 	user_service "account/internal/service/user"
 	"account/internal/transport/grpc"
 	"context"
@@ -48,12 +49,17 @@ func main() {
 	sessionRepository := session_repository.New(db)
 
 	// services
-	userService := user_service.New(userRepository)
+	userService := user_service.New(userRepository, cfg.Server.CdnBaseUrl)
 	banService := ban_service.New(banRepository)
 	codeService := code_service.New(&cfg.SMS, codeRepository)
 	sessionService := session_service.New(sessionRepository)
 
-	useCase := application.New(logger, userService, banService, codeService, sessionService)
+	storageService, err := storage_service.New(&cfg.S3)
+	if err != nil {
+		logger.Fatal("Failed to connect to s3 storage", zap.Error(err))
+	}
+
+	useCase := application.New(logger, userService, banService, codeService, sessionService, storageService)
 
 	grpcServer := grpc.New(useCase)
 

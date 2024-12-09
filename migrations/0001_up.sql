@@ -3,8 +3,8 @@ CREATE TABLE users (
   username    VARCHAR(25) NOT NULL UNIQUE,
   phone       VARCHAR(10) NOT NULL UNIQUE,
   password    VARCHAR(256) NOT NULL,
-  photo       VARCHAR(512),
-  description VARCHAR(256),
+  photo       VARCHAR(512) NOT NULL default '',
+  description VARCHAR(256) NOT NULL default '',
   role_id     INTEGER NOT NULL DEFAULT 1,
   created_at  TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
